@@ -1,0 +1,54 @@
+﻿<Window x:Name="wndMain" x:Class="AccountingTestingPlatform.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AccountingTestingPlatform"
+        d:DataContext="{d:DesignInstance Type=local:ProgressMonitor}"
+        mc:Ignorable="d"
+        Title="Accounting Testing Platform" Height="450" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="/favicon.ico">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <TabControl>
+            <TabItem x:Name="tabTestes" Header="Testes">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="lblRemessa" Content="Remessa:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="lblPerfilGroup" Content="Perfil:" HorizontalAlignment="Left" Margin="10,54,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.658,-2.813"/>
+                    <RadioButton x:Name="radioAberturaExercicio" Content="Abertura do exercício" HorizontalAlignment="Left" Margin="85,60,0,0" VerticalAlignment="Top" GroupName="groupPerfil" Height="15" Width="133"/>
+                    <RadioButton x:Name="radioEncerramentoMensal" Content="Encerramento mensal" HorizontalAlignment="Left" Margin="86,80,0,0" VerticalAlignment="Top" GroupName="groupPerfil" IsChecked="True"/>
+                    <RadioButton x:Name="radioEncerramentoExercicio" Content="Encerramento do exercício" HorizontalAlignment="Left" Margin="86,100,0,0" VerticalAlignment="Top" GroupName="groupPerfil"/>
+                    <Button x:Name="btnStartPerfilTest" Content="Testar" HorizontalAlignment="Left" Height="40" Margin="86,243,0,0" VerticalAlignment="Top" Width="91" Click="BtnStartPerfilTest_Click"/>
+                    <ProgressBar x:Name="progressbarPerfilTest" HorizontalAlignment="Center" Height="38" Margin="0,300,0,0" VerticalAlignment="Top" Width="760" Maximum="100" Value="{Binding ProgressValue}"/>
+                    <Label x:Name="lblTestProgress" Content="{Binding ProgressMessage}" HorizontalAlignment="Center" Height="35" Margin="0,355,0,0" VerticalAlignment="Top" Width="760"/>
+                    <TextBox x:Name="entryRemessa" HorizontalAlignment="Left" Margin="86,18,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <RadioButton x:Name="radioPad" Content="PAD" HorizontalAlignment="Left" Margin="86,120,0,0" VerticalAlignment="Top" GroupName="groupPerfil"/>
+                    <RadioButton x:Name="radioMsc" Content="MSC" HorizontalAlignment="Left" Margin="86,140,0,0" VerticalAlignment="Top" GroupName="groupPerfil"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabValoresManuais" Header="Valores Manuais">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label x:Name="lblRemessa2" Content="Remessa:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="entryRemessa2" HorizontalAlignment="Left" Margin="86,18,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <RadioButton x:Name="radioPm" Content="Prefeitura" HorizontalAlignment="Left" Margin="235,18,0,0" VerticalAlignment="Top"/>
+                    <RadioButton x:Name="radioCm" Content="Câmara" HorizontalAlignment="Left" Margin="319,18,0,0" VerticalAlignment="Top"/>
+                    <RadioButton x:Name="radioFpsm" Content="FPSM" HorizontalAlignment="Left" Margin="397,18,0,0" VerticalAlignment="Top"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="tabSaldosInvertidos" HorizontalAlignment="Center" Height="20" Header="Natureza do saldo" VerticalAlignment="Top" Width="121" Margin="0,-1,0,0">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="NaturezaSaldoDataGrid" d:ItemsSource="{d:SampleData ItemCount=5}" ScrollViewer.VerticalScrollBarVisibility="Visible" Margin="0,0,0,52"/>
+                    <Button x:Name="btnSalvarNaturezaSaldo" Content="Salvar" HorizontalAlignment="Left" Height="22" Margin="705,354,0,0" VerticalAlignment="Top" Width="68" Click="BtnSalvarNaturezaSaldo_Click"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

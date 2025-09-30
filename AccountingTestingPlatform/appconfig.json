@@ -1,0 +1,5 @@
+{
+	"Db": {
+		"ConnectionStr": "Host=localhost;Username=postgres;Password=lise890;Database=pmidd"
+	}
+}
