@@ -65,6 +65,11 @@ public partial class MainWindow : Window
         radioAberturaExercicio.IsEnabled = !radioAberturaExercicio.IsEnabled;
         radioEncerramentoExercicio.IsEnabled = !radioEncerramentoExercicio.IsEnabled;
         radioEncerramentoMensal.IsEnabled = radioEncerramentoMensal.IsEnabled;
+        radioPad.IsEnabled = radioPad.IsEnabled;
+        radioMsc.IsEnabled = radioMsc.IsEnabled;
+        tabSaldosInvertidos.IsEnabled = tabSaldosInvertidos.IsEnabled;
+        tabValoresManuais.IsEnabled = tabValoresManuais.IsEnabled;
+        tabTestes.IsEnabled = tabTestes.IsEnabled;
 
         if (Cursor == Cursors.Wait)
         {
