@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Npgsql;
 using QuestPDF.Infrastructure;
 using System.Data;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,21 +17,14 @@ namespace AccountingTestingPlatform;
 public partial class MainWindow : Window
 {
 
-    private readonly NpgsqlConnection _connection;
-
-    private readonly IConfigurationRoot _config;
+    private NpgsqlConnection _connection;
 
     private DataTable _tblNaturezaSaldo;
     public MainWindow()
     {
         InitializeComponent();
 
-        _config = new ConfigurationBuilder()
-            .AddJsonFile("appconfig.json", optional: false, reloadOnChange: true)
-            .Build();
-
-        _connection = new(new NpgsqlConnectionStringBuilder(_config["Db:ConnectionStr"]).ToString());
-        _connection.Open();
+        LoadConfiguration();
 
         DataContext = new ProgressMonitor();
         
@@ -52,6 +46,20 @@ public partial class MainWindow : Window
         BindNaturezaSaldoDataGrid();
     }
 
+    private void LoadConfiguration()
+    {
+        var config = new ConfigurationBuilder()
+                .AddIniFile("appconfig.ini", optional: false, reloadOnChange: true)
+                .Build();
+        entryDbHostConfig.Text = config["DbHost"];
+        entryDbUserConfig.Text = config["DbUser"];
+        entryDbPasswordConfig.Password = config["DbPassword"];
+        entryDbNameConfig.Text = config["DbName"];
+
+        NpgsqlConnectionStringBuilder connStr = new($"Host={config["DbHost"]};Username={config["DbUser"]};Password={config["DbPassword"]};Database={config["DbName"]}");
+        _connection = new(connStr.ToString());
+        _connection.Open();
+    }
     private void BindNaturezaSaldoDataGrid()
     {
         _tblNaturezaSaldo = NaturezaSaldo.MakeNaturezaSaldoTable(_connection);
@@ -70,6 +78,7 @@ public partial class MainWindow : Window
         tabSaldosInvertidos.IsEnabled = tabSaldosInvertidos.IsEnabled;
         tabValoresManuais.IsEnabled = tabValoresManuais.IsEnabled;
         tabTestes.IsEnabled = tabTestes.IsEnabled;
+        tabConfig.IsEnabled = tabConfig.IsEnabled;
 
         if (Cursor == Cursors.Wait)
         {
@@ -125,13 +134,11 @@ public partial class MainWindow : Window
             {
                 await Task.Run(() =>
                 {
-                    //IReport report = new PdfReport("Testes de Consistência Contábil do Encerramento Mensal", remessa);
                     IProfileTest profile = new EncerramentoMensalProfileTest(_connection, remessa, report);
                     profile.Run(monitor);
                     monitor.UpdateProgress(99, "Testes terminados. Gerando relatório...");
                     report.Save();
                     monitor.UpdateProgress(100, "Relatório gerado.");
-                    //report.Open();
                 });
             }
         }
@@ -188,5 +195,21 @@ public partial class MainWindow : Window
         NaturezaSaldo.Update(_tblNaturezaSaldo, _connection);
         _tblNaturezaSaldo.AcceptChanges();
 
+    }
+
+    private void btnSaveConfig_Click(object sender, RoutedEventArgs e)
+    {
+        using (StreamWriter writer = new StreamWriter("appconfig.ini"))
+        {
+            writer.WriteLine($"DbHost={entryDbHostConfig.Text}");
+            writer.WriteLine($"DbUser={entryDbUserConfig.Text}");
+            writer.WriteLine($"DbPassword={entryDbPasswordConfig.Password}");
+            writer.WriteLine($"DbName={entryDbNameConfig.Text}");
+            writer.Flush();
+            writer.Close();
+        }
+
+        LoadConfiguration();
+        MessageBox.Show("Configurações salvas e recarregadas!");
     }
 }

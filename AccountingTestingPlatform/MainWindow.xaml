@@ -48,6 +48,22 @@
                     <Button x:Name="btnSalvarNaturezaSaldo" Content="Salvar" HorizontalAlignment="Left" Height="22" Margin="705,354,0,0" VerticalAlignment="Top" Width="68" Click="BtnSalvarNaturezaSaldo_Click"/>
                 </Grid>
             </TabItem>
+            <TabItem x:Name="tabConfig" HorizontalAlignment="Center" Height="20" Header="Configurações" VerticalAlignment="Top" Width="94" Margin="0,-1,0,0">
+                <Grid Background="#FFE5E5E5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Db Host" HorizontalAlignment="Left" Margin="33,19,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="entryDbHostConfig" HorizontalAlignment="Left" Margin="38,48,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="359"/>
+                    <Label Content="Db User" HorizontalAlignment="Left" Margin="32,79,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="entryDbUserConfig" HorizontalAlignment="Left" Margin="38,109,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="359"/>
+                    <Label Content="Db Password" HorizontalAlignment="Left" Margin="33,139,0,0" VerticalAlignment="Top"/>
+                    <PasswordBox x:Name="entryDbPasswordConfig" HorizontalAlignment="Left" Margin="38,170,0,0" VerticalAlignment="Top" Width="359"/>
+                    <Label Content="Db name" HorizontalAlignment="Left" Margin="33,200,0,0" VerticalAlignment="Top"/>
+                    <TextBox x:Name="entryDbNameConfig" HorizontalAlignment="Left" Margin="38,231,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="359"/>
+                    <Button x:Name="btnSaveConfig" Content="Salvar" HorizontalAlignment="Left" Margin="658,324,0,0" VerticalAlignment="Top" Height="40" Width="74" Click="btnSaveConfig_Click"/>
+                </Grid>
+            </TabItem>
         </TabControl>
 
     </Grid>
