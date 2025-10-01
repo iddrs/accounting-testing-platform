@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Data;
+﻿using System.Data;
 using Npgsql;
-using System.Security.Cryptography;
 using System.Windows;
 
 namespace AccountingTestingPlatform.NaturezaSaldos;

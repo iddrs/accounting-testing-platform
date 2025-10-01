@@ -116,6 +116,13 @@ class EncerramentoMensalProfileTest : ProfileTestBase
         TestList.Add(new SaldosInvertidosTest(connection, remessa, report));
         TestList.Add(new RecursosExercicioTest(connection, remessa, report));
         TestList.Add(new SaldosSuperavitTest(connection, remessa, report));
+        TestList.Add(new PatrimonioSaldosFinalInicialTest(connection, remessa, report));
+        TestList.Add(new PatrimonioDepreciacaoTest(connection, remessa, report));
+        TestList.Add(new PatrimonioImobilizadoTest(connection, remessa, report));
+        TestList.Add(new EstoqueSaldoInicialTest(connection, remessa, report));
+        TestList.Add(new EstoqueEntradasTest(connection, remessa, report));
+        TestList.Add(new EstoqueSaidasTest(connection, remessa, report));
+        TestList.Add(new EstoqueSaldoFinalTest(connection, remessa, report));
 
 
         //TestList.Add(new FailTest(connection, remessa, report));

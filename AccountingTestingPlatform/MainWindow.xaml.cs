@@ -1,4 +1,5 @@
-﻿using AccountingTestingPlatform.NaturezaSaldos;
+﻿using AccountingTestingPlatform.ValoresManuais;
+using AccountingTestingPlatform.NaturezaSaldos;
 using AccountingTestingPlatform.Profile;
 using AccountingTestingPlatform.Report;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,7 @@ public partial class MainWindow : Window
     private NpgsqlConnection _connection;
 
     private DataTable _tblNaturezaSaldo;
+    private DataTable _tblValoresManuais;
     public MainWindow()
     {
         InitializeComponent();
@@ -44,6 +46,8 @@ public partial class MainWindow : Window
         }
 
         BindNaturezaSaldoDataGrid();
+
+        entryRemessa2.Text = entryRemessa.Text;
     }
 
     private void LoadConfiguration()
@@ -211,5 +215,55 @@ public partial class MainWindow : Window
 
         LoadConfiguration();
         MessageBox.Show("Configurações salvas e recarregadas!");
+    }
+
+    private void btnCarregarValoresManuais_Click(object sender, RoutedEventArgs e)
+    {
+        string entidade;
+        if (radioCm.IsChecked == true)
+        {
+            entidade = "cm";
+        }
+        else if (radioPm.IsChecked == true)
+        {
+            entidade = "pm";
+        }
+        else if (radioFpsm.IsChecked == true)
+        {
+            entidade = "fpsm";
+        }
+        else
+        {
+            MessageBox.Show("Precisa selecionar a entidade.",
+                button: MessageBoxButton.OK,
+            caption: "Erro na entidade:",
+            icon: MessageBoxImage.Exclamation);
+            return;
+        }
+
+        try
+        {
+            TestRemessa(entryRemessa2.Text, 12);
+        }
+        catch (ArgumentException ex)
+        {
+            MessageBox.Show(ex.Message,
+            button: MessageBoxButton.OK,
+            caption: "Erro na remessa:",
+            icon: MessageBoxImage.Exclamation);
+            entryRemessa2.Focus();
+            entryRemessa2.SelectAll();
+            return;
+        }
+
+        _tblValoresManuais = ValoresManuais.ValoresManuais.MakeValoresManuaisTable(_connection, entryRemessa2.Text, entidade);
+
+        gridValoresManuais.ItemsSource = _tblValoresManuais.DefaultView;
+        btnSalvarValoresManuais.IsEnabled = true;
+    }
+
+    private void btnSalvarValoresManuais_Click(object sender, RoutedEventArgs e)
+    {
+        ValoresManuais.ValoresManuais.Update(_tblValoresManuais, _connection);
     }
 }

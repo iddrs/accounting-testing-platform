@@ -40,6 +40,9 @@
                     <RadioButton x:Name="radioPm" Content="Prefeitura" HorizontalAlignment="Left" Margin="235,18,0,0" VerticalAlignment="Top"/>
                     <RadioButton x:Name="radioCm" Content="Câmara" HorizontalAlignment="Left" Margin="319,18,0,0" VerticalAlignment="Top"/>
                     <RadioButton x:Name="radioFpsm" Content="FPSM" HorizontalAlignment="Left" Margin="397,18,0,0" VerticalAlignment="Top"/>
+                    <DataGrid x:Name="gridValoresManuais" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="0,57,0,0"/>
+                    <Button x:Name="btnSalvarValoresManuais" Content="Salvar" HorizontalAlignment="Left" Margin="718,16,0,0" VerticalAlignment="Top" Width="46" Click="btnSalvarValoresManuais_Click" IsEnabled="False"/>
+                    <Button x:Name="btnCarregarValoresManuais" Content="Carregar" HorizontalAlignment="Left" Margin="464,16,0,0" VerticalAlignment="Top" Width="66" Click="btnCarregarValoresManuais_Click"/>
                 </Grid>
             </TabItem>
             <TabItem x:Name="tabSaldosInvertidos" HorizontalAlignment="Center" Height="20" Header="Natureza do saldo" VerticalAlignment="Top" Width="121" Margin="0,-1,0,0">
