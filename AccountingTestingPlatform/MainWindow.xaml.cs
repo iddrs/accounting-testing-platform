@@ -110,7 +110,33 @@ public partial class MainWindow : Window
         }
         if (radioPad.IsChecked == true)
         {
-            throw new NotImplementedException();
+            report = new PdfReport("Testes de Consistência dos *.txt do PAD", remessa);
+            try
+            {
+                TestRemessa(entryRemessa.Text, 12);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message,
+                button: MessageBoxButton.OK,
+                caption: "Erro na remessa:",
+                icon: MessageBoxImage.Exclamation);
+                entryRemessa.Focus();
+                entryRemessa.SelectAll();
+                return;
+            }
+
+            if (DataContext is ProgressMonitor monitor)
+            {
+                await Task.Run(() =>
+                {
+                    IProfileTest profile = new ConsistenciaTxtPadProfileTest(_connection, remessa, report);
+                    profile.Run(monitor);
+                    monitor.UpdateProgress(99, "Testes terminados. Gerando relatório...");
+                    report.Save();
+                    monitor.UpdateProgress(100, "Relatório gerado.");
+                });
+            }
         }
         if (radioMsc.IsChecked == true)
         {
