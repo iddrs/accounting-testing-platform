@@ -140,7 +140,33 @@ public partial class MainWindow : Window
         }
         if (radioMsc.IsChecked == true)
         {
-            throw new NotImplementedException();
+            report = new PdfReport("Testes de Consistência da MSC", remessa, true);
+            try
+            {
+                TestRemessa(entryRemessa.Text, 13);
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message,
+                button: MessageBoxButton.OK,
+                caption: "Erro na remessa:",
+                icon: MessageBoxImage.Exclamation);
+                entryRemessa.Focus();
+                entryRemessa.SelectAll();
+                return;
+            }
+
+            if (DataContext is ProgressMonitor monitor)
+            {
+                await Task.Run(() =>
+                {
+                    IProfileTest profile = new ConsistenciaMscProfileTest(_connection, remessa, report);
+                    profile.Run(monitor);
+                    monitor.UpdateProgress(99, "Testes terminados. Gerando relatório...");
+                    report.Save();
+                    monitor.UpdateProgress(100, "Relatório gerado.");
+                });
+            }
         }
         if (radioEncerramentoMensal.IsChecked == true)
         {

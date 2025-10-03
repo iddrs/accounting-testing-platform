@@ -26,11 +26,14 @@ class PdfReport : IReport
     private readonly Dictionary<string, List<ITestResult>> _tests = [];
 
     private Document _doc;
-    public PdfReport(string title, string remessa) 
+
+    private bool _IsLandscape = false;
+    public PdfReport(string title, string remessa, bool IsLandscape = true) 
     {
         _filepath = $"{Path.GetTempFileName()}.pdf";
         _title = title ;
         _remessa = remessa ;
+        _IsLandscape = IsLandscape;
     }
     public void AddTest(string testName, List<ITestResult> testResults)
     {
@@ -103,7 +106,11 @@ class PdfReport : IReport
 
             document.Page(page =>
             {
-                page.Size(PageSizes.A4);
+                if(_IsLandscape)
+                    page.Size(PageSizes.A4.Landscape());
+                else
+                    page.Size(PageSizes.A4);
+
                 page.Margin(2, Unit.Centimetre);
                 page.PageColor(Colors.White);
                 page.DefaultTextStyle(x => x.FontSize(10).FontFamily(Fonts.Calibri));
