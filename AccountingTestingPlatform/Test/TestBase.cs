@@ -20,7 +20,7 @@ internal abstract class TestBase : ITest
         int ano = GetAnoRemessa(remessa);
         int mes = int.Parse(remessa.Substring(4, 2));
         DateTime dt0 = new DateTime(ano, 1, 1);
-        DateTime dt1 = new DateTime(ano, mes, 31);
+        DateTime dt1 = new DateTime(ano, mes, DateTime.DaysInMonth(ano, mes));
 
         return (dt0.ToString("yyyy-MM-dd"), dt1.ToString("yyyy-MM-dd"));
     }

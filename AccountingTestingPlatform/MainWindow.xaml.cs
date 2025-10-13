@@ -1,5 +1,4 @@
-﻿using AccountingTestingPlatform.ValoresManuais;
-using AccountingTestingPlatform.NaturezaSaldos;
+﻿using AccountingTestingPlatform.NaturezaSaldos;
 using AccountingTestingPlatform.Profile;
 using AccountingTestingPlatform.Report;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +8,10 @@ using System.Data;
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Win32;
+using CsvHelper;
+using System.Globalization;
+using CsvHelper.Configuration;
 
 namespace AccountingTestingPlatform;
 
@@ -106,7 +109,38 @@ public partial class MainWindow : Window
         }
         if (radioEncerramentoExercicio.IsChecked == true)
         {
-            throw new NotImplementedException();
+            report = new PdfReport("Testes de Consistência Contábil do Encerramento Anual", remessa);
+            try
+            {
+                TestRemessa(entryRemessa.Text, 12);
+                if(!entryRemessa.Text.EndsWith("12"))
+                {
+                    throw new ArgumentException("A remessa de encerramento anual precisa ser a de dezembro.");
+                }
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message,
+                button: MessageBoxButton.OK,
+                caption: "Erro na remessa:",
+                icon: MessageBoxImage.Exclamation);
+                ToggleEnableUI();
+                entryRemessa.Focus();
+                entryRemessa.SelectAll();
+                return;
+            }
+
+            if (DataContext is ProgressMonitor monitor)
+            {
+                await Task.Run(() =>
+                {
+                    IProfileTest profile = new EncerramentoAnualProfileTest(_connection, remessa, report);
+                    profile.Run(monitor);
+                    monitor.UpdateProgress(99, "Testes terminados. Gerando relatório...");
+                    report.Save();
+                    monitor.UpdateProgress(100, "Relatório gerado.");
+                });
+            }
         }
         if (radioPad.IsChecked == true)
         {
@@ -121,6 +155,7 @@ public partial class MainWindow : Window
                 button: MessageBoxButton.OK,
                 caption: "Erro na remessa:",
                 icon: MessageBoxImage.Exclamation);
+                ToggleEnableUI();
                 entryRemessa.Focus();
                 entryRemessa.SelectAll();
                 return;
@@ -151,6 +186,7 @@ public partial class MainWindow : Window
                 button: MessageBoxButton.OK,
                 caption: "Erro na remessa:",
                 icon: MessageBoxImage.Exclamation);
+                ToggleEnableUI();
                 entryRemessa.Focus();
                 entryRemessa.SelectAll();
                 return;
@@ -181,6 +217,7 @@ public partial class MainWindow : Window
                 button: MessageBoxButton.OK,
                 caption: "Erro na remessa:",
                 icon: MessageBoxImage.Exclamation);
+                ToggleEnableUI();
                 entryRemessa.Focus();
                 entryRemessa.SelectAll();
                 return;
@@ -303,6 +340,7 @@ public partial class MainWindow : Window
             button: MessageBoxButton.OK,
             caption: "Erro na remessa:",
             icon: MessageBoxImage.Exclamation);
+            ToggleEnableUI();
             entryRemessa2.Focus();
             entryRemessa2.SelectAll();
             return;
@@ -317,5 +355,137 @@ public partial class MainWindow : Window
     private void btnSalvarValoresManuais_Click(object sender, RoutedEventArgs e)
     {
         ValoresManuais.ValoresManuais.Update(_tblValoresManuais, _connection);
+    }
+
+    private void btnSelectMscMapFilepath_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new OpenFileDialog();
+        dialog.Title = "Selecione o arquivo de mapeamento da MSC";
+        dialog.Multiselect = false;
+        dialog.Filter = "Arquivos CSV (*.csv)|*.csv|Todos os arquivos (*.*)|*.*";
+        bool? result = dialog.ShowDialog();
+        if(result == true)
+        {
+            entryMscMapFilepath.Text = dialog.FileName;
+            btnImportMscMapFilepath.IsEnabled = true;
+        }
+    }
+
+    private void btnImportMscMapFilepath_Click(object sender, RoutedEventArgs e)
+    {
+        btnImportMscMapFilepath.IsEnabled = false;
+        btnSelectMscMapFilepath.IsEnabled = false;
+        entryMscMapFilepath.IsEnabled = false;
+        progressImportMscMapFilepath.IsIndeterminate = true;
+
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = true,
+            Delimiter = ";",
+            MissingFieldFound = null,
+            BadDataFound = null,
+            HeaderValidated = null,
+            IgnoreBlankLines = true,
+            TrimOptions = TrimOptions.Trim,
+            PrepareHeaderForMatch = args => args.Header.ToLower(),
+        };
+
+        using (var reader = new StreamReader(entryMscMapFilepath.Text))
+        using (var csv = new CsvReader(reader, config))
+        {
+            csv.Context.RegisterClassMap<ColDefMap>();
+            var records = csv.GetRecords<ColDef>();
+            NpgsqlTransaction transaction1 = _connection.BeginTransaction();
+            try
+            {
+                using (var cmd = new NpgsqlCommand("update msc.mapeamento_cc set excluir = 1 where excluir = 0", _connection, transaction1))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                transaction1.Commit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao marcar registros para exclusão: {ex.Message}");
+                transaction1.Rollback();
+            }
+
+            NpgsqlTransaction transaction2 = _connection.BeginTransaction();
+            try
+            {
+                foreach (var record in records)
+                {
+                    if (record.N.ToLower() != "a")
+                    {
+                        continue;
+                    }
+                    if (!char.IsDigit(record.ContaSistema[0]))
+                    {
+                        continue;
+                    }
+
+                    string cc_pad = record.ContaSistema.Trim(' ').Replace(".", "").PadRight(15, '0');
+                    string cc_msc = record.ContaMsc.Trim(' ').Replace(".", "").PadRight(9, '0');
+                    string sql = $"insert into msc.mapeamento_cc (conta_contabil_pad, conta_contabil_msc, excluir) values ('{cc_pad}', '{cc_msc}', 0)";
+                    using (var cmd = new NpgsqlCommand(sql, _connection, transaction2))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                transaction2.Commit();
+            }
+            catch (Exception ex)
+            {
+                
+                MessageBox.Show($"Erro ao inserir registros: {ex.Message}");
+                transaction2.Rollback();
+            }
+
+            NpgsqlTransaction transaction3 = _connection.BeginTransaction();
+            try
+            {
+                using (var cmd = new NpgsqlCommand("delete from msc.mapeamento_cc where excluir = 1", _connection, transaction3))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                transaction3.Commit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao excluir registros antigos: {ex.Message}");
+                transaction3.Rollback();
+            }
+
+        }
+        btnImportMscMapFilepath.IsEnabled = true;
+        btnSelectMscMapFilepath.IsEnabled = true;
+        entryMscMapFilepath.IsEnabled = true;
+        MessageBox.Show("Importação concluída!");
+        progressImportMscMapFilepath.IsIndeterminate = false;
+    }
+}
+
+public class ColDef
+{
+    public string? Mapped { get; set; }
+    public string? N { get; set; }
+    public string? ContaSistema { get; set; }
+    public string? DescricaoSistema { get; set; }
+    public string? ContaMsc { get; set; }
+    public string? DescricaoMsc { get; set; }
+    public string? Dcl { get; set; }
+}
+
+public class ColDefMap : ClassMap<ColDef>
+{
+    public ColDefMap()
+    {
+        Map(m => m.Mapped).Index(0);
+        Map(m => m.N).Index(1);
+        Map(m => m.ContaSistema).Index(2);
+        Map(m => m.DescricaoSistema).Index(3);
+        Map(m => m.ContaMsc).Index(4);
+        Map(m => m.DescricaoMsc).Index(5);
+        Map(m => m.Dcl).Index(6);
     }
 }
