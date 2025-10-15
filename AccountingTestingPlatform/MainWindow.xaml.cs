@@ -395,19 +395,20 @@ public partial class MainWindow : Window
         {
             csv.Context.RegisterClassMap<ColDefMap>();
             var records = csv.GetRecords<ColDef>();
-            NpgsqlTransaction transaction1 = _connection.BeginTransaction();
+
+            NpgsqlTransaction transaction3 = _connection.BeginTransaction();
             try
             {
-                using (var cmd = new NpgsqlCommand("update msc.mapeamento_cc set excluir = 1 where excluir = 0", _connection, transaction1))
+                using (var cmd = new NpgsqlCommand("truncate msc.mapeamento_cc", _connection, transaction3))
                 {
                     cmd.ExecuteNonQuery();
                 }
-                transaction1.Commit();
+                transaction3.Commit();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao marcar registros para exclusão: {ex.Message}");
-                transaction1.Rollback();
+                MessageBox.Show($"Erro ao excluir registros antigos: {ex.Message}");
+                transaction3.Rollback();
             }
 
             NpgsqlTransaction transaction2 = _connection.BeginTransaction();
@@ -426,7 +427,7 @@ public partial class MainWindow : Window
 
                     string cc_pad = record.ContaSistema.Trim(' ').Replace(".", "").PadRight(15, '0');
                     string cc_msc = record.ContaMsc.Trim(' ').Replace(".", "").PadRight(9, '0');
-                    string sql = $"insert into msc.mapeamento_cc (conta_contabil_pad, conta_contabil_msc, excluir) values ('{cc_pad}', '{cc_msc}', 0)";
+                    string sql = $"insert into msc.mapeamento_cc (conta_contabil_pad, conta_contabil_msc) values ('{cc_pad}', '{cc_msc}')";
                     using (var cmd = new NpgsqlCommand(sql, _connection, transaction2))
                     {
                         cmd.ExecuteNonQuery();
@@ -439,21 +440,6 @@ public partial class MainWindow : Window
                 
                 MessageBox.Show($"Erro ao inserir registros: {ex.Message}");
                 transaction2.Rollback();
-            }
-
-            NpgsqlTransaction transaction3 = _connection.BeginTransaction();
-            try
-            {
-                using (var cmd = new NpgsqlCommand("delete from msc.mapeamento_cc where excluir = 1", _connection, transaction3))
-                {
-                    cmd.ExecuteNonQuery();
-                }
-                transaction3.Commit();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao excluir registros antigos: {ex.Message}");
-                transaction3.Rollback();
             }
 
         }
