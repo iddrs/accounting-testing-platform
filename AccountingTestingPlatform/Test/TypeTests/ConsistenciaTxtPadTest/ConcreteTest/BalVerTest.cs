@@ -64,6 +64,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaTxtPadTest.Concre
             };
             
             ITestResult result = new ConsistenciaTxtPadTestResult(this);
+            result.SetSuccess(true);
 
             foreach(KeyValuePair<string, string> item in items)
             {
@@ -79,10 +80,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaTxtPadTest.Concre
                 diferenca = esperado - encontrado;
                 
                 dt.Rows.Add(item.Key, esperado, encontrado, diferenca);
-                if(diferenca == 0m)
-                {
-                    result.SetSuccess(true);
-                } else
+                if (diferenca != 0m)
                 {
                     result.SetSuccess(false);
                 }

@@ -40,8 +40,9 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaTxtPadTest.Concre
             };
             
             ITestResult result = new ConsistenciaTxtPadTestResult(this);
-            
-            foreach(KeyValuePair<string, string> item in items)
+            result.SetSuccess(true);
+
+            foreach (KeyValuePair<string, string> item in items)
             {
                 string sql1 = $"select sum(valor)::decimal from auxiliar.dados_manuais where remessa = {_remessa} and entidade like '{entidade}' and item like '{item.Key}';";
                 string sql2 = item.Value;
@@ -55,10 +56,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaTxtPadTest.Concre
                 diferenca = esperado - encontrado;
                 
                 dt.Rows.Add(item.Key, esperado, encontrado, diferenca);
-                if(diferenca == 0m)
-                {
-                    result.SetSuccess(true);
-                } else
+                if(diferenca != 0m)
                 {
                     result.SetSuccess(false);
                 }
