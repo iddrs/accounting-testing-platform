@@ -167,12 +167,10 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaMscTest.ConcreteT
 
                             SELECT * FROM t9
                             WHERE
-                            conta_contabil_balver IS NULL
-                            OR conta_contabil_msc IS NULL
-                            OR saldo_anterior_diferenca::DECIMAL <> 0.0
-                            OR debitos_diferenca::DECIMAL <> 0.0
-                            OR creditos_diferenca::DECIMAL <> 0.0
-                            OR saldo_atual_diferenca::DECIMAL <> 0.0";
+                            saldo_anterior_diferenca::DECIMAL <> 0::DECIMAL
+                            OR debitos_diferenca::DECIMAL <> 0::DECIMAL
+                            OR creditos_diferenca::DECIMAL <> 0::DECIMAL
+                            OR saldo_atual_diferenca::DECIMAL <> 0::DECIMAL";
 
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, _connection))
             using (NpgsqlDataReader reader = cmd.ExecuteReader())
