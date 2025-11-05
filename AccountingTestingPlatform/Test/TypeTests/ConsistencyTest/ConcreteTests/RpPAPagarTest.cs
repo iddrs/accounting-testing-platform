@@ -22,8 +22,8 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistencyTest.ConcreteTests
             ];
             string[] sql2 = [
                 $"select sum(saldo_final_processado)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
-                $"select sum(rp_liquidado *-1)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
-                $"select sum(nao_processado_pago)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
+                //$"select sum(rp_liquidado *-1)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
+                //$"select sum(nao_processado_pago)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
             ];
 
             List<decimal> val1 = new();

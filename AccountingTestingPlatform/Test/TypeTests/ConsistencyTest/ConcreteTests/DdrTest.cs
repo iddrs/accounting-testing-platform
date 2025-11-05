@@ -24,7 +24,10 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistencyTest.ConcreteTests
                 $"select sum(saldo_atual)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and escrituracao like 'S' and conta_contabil like '1%' and indicador_superavit_financeiro like 'F';",
                 $"select sum(saldo_atual *-1)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and escrituracao like 'S' and conta_contabil like '21%' and indicador_superavit_financeiro like 'F';",
                 $"select sum(saldo_atual *-1)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and escrituracao like 'S' and conta_contabil like '22%' and indicador_superavit_financeiro like 'F';",
-                $"select sum(saldo_final_nao_processado *-1)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
+                //$"select sum(saldo_final_nao_processado *-1)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
+                $"select sum(saldo_inicial_nao_processado *-1)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
+                $"select sum(rp_liquidado)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
+                $"select sum(nao_processado_cancelado)::decimal from pad.restos_pagar where remessa = {_remessa} and entidade like '{entidade}';",
                 $"select sum(empenhado_a_liquidar *-1)::decimal from pad.bal_desp where remessa = {_remessa} and entidade like '{entidade}';",
             ];
 
