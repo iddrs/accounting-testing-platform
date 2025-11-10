@@ -154,7 +154,8 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaMscTest.ConcreteT
                             saldo_inicial::decimal,
                             (saldo_final::decimal - saldo_inicial::decimal) AS diferenca
                             FROM comparativo
-                            WHERE saldo_inicial::DECIMAL <> saldo_final::DECIMAL";
+                            WHERE saldo_inicial::DECIMAL <> saldo_final::DECIMAL
+                            ORDER BY conta_contabil_anterior ASC";
             
             using (NpgsqlCommand cmd = new NpgsqlCommand(sql, _connection))
             using (NpgsqlDataReader reader = cmd.ExecuteReader())
