@@ -65,6 +65,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaMscTest.ConcreteT
                                     SUM(saldo_atual) AS saldo_anterior
                                 FROM PAD.bal_ver
                                 WHERE remessa = {remessaAnterior}
+                                    AND escrituracao = 'S'
                                 GROUP BY conta_contabil
                             ),
                             t2 AS (
@@ -84,6 +85,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaMscTest.ConcreteT
                             SUM(saldo_atual) AS saldo_atual
                             FROM PAD.bal_ver
                             WHERE remessa = {_remessa}
+                            AND escrituracao = 'S'
                             GROUP BY conta_contabil
                             ),
                             t4 AS (
