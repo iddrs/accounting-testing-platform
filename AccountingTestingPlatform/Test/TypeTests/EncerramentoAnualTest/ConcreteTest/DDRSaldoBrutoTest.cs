@@ -39,7 +39,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.EncerramentoAnualTest.Concret
                         SELECT
                         t1.*,
                         COALESCE(
-                            (SELECT SUM(saldo_inicial)::DECIMAL FROM PAD.bver_enc
+                            (SELECT SUM(saldo_atual)::DECIMAL FROM PAD.bver_enc
                             WHERE remessa = {_remessa} AND entidade LIKE '{entidade}'
                             AND fonte_recurso = t1.recurso_vinculado
                             AND escrituracao LIKE 'S' AND (conta_contabil LIKE '111%' OR conta_contabil LIKE '114%') AND indicador_superavit_financeiro LIKE 'F')
