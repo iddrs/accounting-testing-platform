@@ -54,6 +54,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistencyTest.ConcreteTests
                 $"select sum(saldo_atual *-1)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and conta_contabil like '123210503%' and escrituracao like 'S';",
                 $"select sum(saldo_atual *-1)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and conta_contabil like '123210504%' and escrituracao like 'S';",
                 $"select sum(saldo_atual *-1)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and conta_contabil like '123210506%' and escrituracao like 'S';",
+                $"select sum(saldo_atual *-1)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and conta_contabil like '123210599%' and escrituracao like 'S';",
                 $"select sum(saldo_atual *-1)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and conta_contabil like '1232106%' and escrituracao like 'S';",
                 $"select sum(saldo_atual *-1)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and conta_contabil like '1232107%' and escrituracao like 'S';",
             ];
