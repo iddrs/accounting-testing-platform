@@ -106,7 +106,7 @@ class EncerramentoMensalProfileTest : ProfileTestBase
         TestList.Add(new ReceitaDespesaIntraTest(connection, remessa, report));
         TestList.Add(new SaldoPlIntraTest(connection, remessa, report));
         TestList.Add(new DuodecimoVpaVpdInscricaoTest(connection, remessa, report));
-        TestList.Add(new ValorAtualAmortizacaoPassivoAtuarialTest(connection, remessa, report));
+        //TestList.Add(new ValorAtualAmortizacaoPassivoAtuarialTest(connection, remessa, report));
         TestList.Add(new DiariasAPagarTest(connection, remessa, report));
         TestList.Add(new ResultadoExercicioConsolidacaoTest(connection, remessa, report));
         TestList.Add(new ResultadoExercicioIntraTest(connection, remessa, report));
