@@ -15,7 +15,6 @@ internal class ValoresManuais
     {
         DataTable dt = new DataTable();
         DataColumn column;
-        DataRow row;
 
         column = new DataColumn();
         column.DataType = typeof(string);

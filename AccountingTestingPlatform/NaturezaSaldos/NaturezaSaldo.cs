@@ -11,7 +11,6 @@ internal class NaturezaSaldo
     {
         DataTable dt = new DataTable("tblNaturezaSaldo");
         DataColumn column;
-        DataRow row;
 
         column = new DataColumn();
         //column.DataType = Type.GetType("System.String");

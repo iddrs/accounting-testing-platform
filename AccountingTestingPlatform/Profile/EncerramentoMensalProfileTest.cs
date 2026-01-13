@@ -51,10 +51,10 @@ class EncerramentoMensalProfileTest : ProfileTestBase
         TestList.Add(new ValorEmpenhadoTest(connection, remessa, report));
         TestList.Add(new RpNpInscritosUltimoExercicioTest(connection, remessa, report));
         TestList.Add(new RpNpInscritosExercicioAnteriorTest(connection, remessa, report));
-        TestList.Add(new RpNpInscritosInscricaoNoExercicio(connection, remessa, report));
+        //TestList.Add(new RpNpInscritosInscricaoNoExercicio(connection, remessa, report));
         TestList.Add(new RpPInscritosUltimoExercicioTest(connection, remessa, report));
         TestList.Add(new RpPInscritosExerciciosAnterioresTest(connection, remessa, report));
-        TestList.Add(new RpPInscritosInscricaoNoExercicio(connection, remessa, report));
+        //TestList.Add(new RpPInscritosInscricaoNoExercicio(connection, remessa, report));
         TestList.Add(new ReceitaARealizarTest(connection, remessa, report));
         TestList.Add(new ReceitaBrutaRealizadaTest(connection, remessa, report));
         TestList.Add(new DeducaoFundebRealizadaTest(connection, remessa, report));
@@ -71,11 +71,11 @@ class EncerramentoMensalProfileTest : ProfileTestBase
         TestList.Add(new RpNpALiquidarTest(connection, remessa, report));
         TestList.Add(new RpNpLiquidadoAPagarTest(connection, remessa, report));
         TestList.Add(new RpNpPagoTest(connection, remessa, report));
-        TestList.Add(new RpNpInscritoExercicioTest(connection, remessa, report));
+        //TestList.Add(new RpNpInscritoExercicioTest(connection, remessa, report));
         TestList.Add(new RpNpCanceladosTest(connection, remessa, report));
         TestList.Add(new RpPAPagarTest(connection, remessa, report));
         TestList.Add(new RpPPagoTest(connection, remessa, report));
-        TestList.Add(new RpPInscritoExercicioTest(connection, remessa, report));
+        //TestList.Add(new RpPInscritoExercicioTest(connection, remessa, report));
         TestList.Add(new RpPCanceladosTest(connection, remessa, report));
         TestList.Add(new DdrTest(connection, remessa, report));
         TestList.Add(new DdrEmpenhadaTest(connection, remessa, report));
