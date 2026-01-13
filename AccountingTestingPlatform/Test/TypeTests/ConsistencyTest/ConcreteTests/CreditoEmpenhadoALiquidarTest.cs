@@ -19,6 +19,8 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistencyTest.ConcreteTests
         {
             string[] sql1 = [
                 $"select sum(saldo_atual)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and escrituracao like 'S' and conta_contabil like '6221301%';",
+                $"select sum(saldo_atual)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and escrituracao like 'S' and conta_contabil like '6221305%';",
+                $"select sum(saldo_atual)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like '{entidade}' and escrituracao like 'S' and conta_contabil like '6221306%';",
             ];
             string[] sql2 = [
                 $"select sum(empenhado_a_liquidar)::decimal from pad.bal_desp where remessa = {_remessa} and entidade like '{entidade}';",
