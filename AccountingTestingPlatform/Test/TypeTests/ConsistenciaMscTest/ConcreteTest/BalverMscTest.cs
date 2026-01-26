@@ -34,7 +34,13 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistenciaMscTest.ConcreteT
             dt.Columns.Add("Saldo atual msc", typeof(decimal));
             dt.Columns.Add("Diferença saldo atual", typeof(decimal));
 
-            string inicioMes = $"{_remessa.Substring(0, 4)}-{_remessa.Substring(4, 2)}-01";
+            string ano = _remessa.Substring(0, 4);
+            string mes = _remessa.Substring(4, 2);
+            if(mes == "13")
+            {
+                mes = "12";
+            }
+            string inicioMes = $"{ano}-{mes}-01";
             string fimMes = DateTime.Parse(inicioMes).AddMonths(1).ToString("yyyy-MM-dd");
             string remessaAnterior = GetRemessaAnterior(_remessa);
 

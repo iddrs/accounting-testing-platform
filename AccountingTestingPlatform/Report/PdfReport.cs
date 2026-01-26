@@ -53,6 +53,10 @@ class PdfReport : IReport
             {
                 int month = int.Parse(remessa.Substring(4, 2));
                 int year = int.Parse(remessa.Substring(0, 4));
+                if(month == 13)
+                {
+                    month = 12;
+                }
                 DateTime date = new DateTime(year, month, 1);
                 return date.ToString("MMMM 'de' yyyy");
             }
