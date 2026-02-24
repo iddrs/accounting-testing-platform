@@ -21,7 +21,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.RecursosExercicioTest.Concret
             dt.Columns.Add("Empenhos do exercício", typeof(decimal));
             dt.Columns.Add("Créditos abertos por superávit", typeof(decimal));
             dt.Columns.Add("Créditos extraordinários", typeof(decimal));
-            dt.Columns.Add("Créditos reabertos", typeof(decimal));
+            //dt.Columns.Add("Créditos reabertos", typeof(decimal));
             dt.Columns.Add("Transferências recebidas", typeof(decimal));
             dt.Columns.Add("Transferências concedidas", typeof(decimal));
             dt.Columns.Add("Ajustes", typeof(decimal));
@@ -64,11 +64,11 @@ namespace AccountingTestingPlatform.Test.TypeTests.RecursosExercicioTest.Concret
 	                        AND fonte_recurso_suplementacao = t1.recurso_vinculado
 	                        AND origem_recurso <> 1 AND tipo_credito_adicional = 3)
                         , 0.0) AS credito_extraordinario,
-                        COALESCE(
-	                        (SELECT SUM(valor_saldo_reaberto)::DECIMAL FROM PAD.decreto
-	                        WHERE remessa = {_remessa} AND entidade LIKE '{entidade}'
-	                        AND fonte_recurso_suplementacao = t1.recurso_vinculado)
-                        , 0.0) AS credito_reaberto,
+                        --COALESCE(
+	                    --    (SELECT SUM(valor_saldo_reaberto)::DECIMAL FROM PAD.decreto
+	                    --    WHERE remessa = {_remessa} AND entidade LIKE '{entidade}'
+	                    --    AND fonte_recurso_suplementacao = t1.recurso_vinculado)
+                        --, 0.0) AS credito_reaberto,
                         COALESCE(
 	                        (SELECT SUM(saldo_atual)::DECIMAL FROM PAD.bal_ver
 	                        WHERE remessa = {_remessa} AND entidade LIKE '{entidade}'
@@ -91,8 +91,10 @@ namespace AccountingTestingPlatform.Test.TypeTests.RecursosExercicioTest.Concret
                         t3 AS (
                         SELECT t2.*,
                         (
+                        --receita_arrecadada - empenhos_exercicio + credito_superavit + credito_extraordinario
+                        --+ credito_reaberto + transferencia_recebida - transferencia_concedida + ajustes
                         receita_arrecadada - empenhos_exercicio + credito_superavit + credito_extraordinario
-                        + credito_reaberto + transferencia_recebida - transferencia_concedida + ajustes
+                        + transferencia_recebida - transferencia_concedida + ajustes
                         ) AS disponivel
                         FROM t2
                         ),
@@ -119,25 +121,37 @@ namespace AccountingTestingPlatform.Test.TypeTests.RecursosExercicioTest.Concret
             {
                 while (reader.Read())
                 {
+                    //string fr = reader.GetInt16(0).ToString();
+                    //decimal receita = reader.GetDecimal(1);
+                    //decimal empenhos = reader.GetDecimal(2);
+                    //decimal creditos_superavit = reader.GetDecimal(3);
+                    //decimal extraordinarios = reader.GetDecimal(4);
+                    //decimal reabertos = reader.GetDecimal(5);
+                    //decimal transf_recebidas = reader.GetDecimal(6);
+                    //decimal transf_concedidas = reader.GetDecimal(7);
+                    //decimal ajustes = reader.GetDecimal(8);
+                    //decimal disponivel = reader.GetDecimal(9);
+                    //decimal saldo_contabil = reader.GetDecimal(10);
+                    //decimal diferenca = reader.GetDecimal(11);
                     string fr = reader.GetInt16(0).ToString();
                     decimal receita = reader.GetDecimal(1);
                     decimal empenhos = reader.GetDecimal(2);
                     decimal creditos_superavit = reader.GetDecimal(3);
                     decimal extraordinarios = reader.GetDecimal(4);
-                    decimal reabertos = reader.GetDecimal(5);
-                    decimal transf_recebidas = reader.GetDecimal(6);
-                    decimal transf_concedidas = reader.GetDecimal(7);
-                    decimal ajustes = reader.GetDecimal(8);
-                    decimal disponivel = reader.GetDecimal(9);
-                    decimal saldo_contabil = reader.GetDecimal(10);
-                    decimal diferenca = reader.GetDecimal(11);
+                    decimal transf_recebidas = reader.GetDecimal(5);
+                    decimal transf_concedidas = reader.GetDecimal(6);
+                    decimal ajustes = reader.GetDecimal(7);
+                    decimal disponivel = reader.GetDecimal(8);
+                    decimal saldo_contabil = reader.GetDecimal(9);
+                    decimal diferenca = reader.GetDecimal(10);
 
                     if (diferenca != 0m)
                     {
                         fails = true;
                     }
 
-                    dt.Rows.Add(fr, receita, empenhos, creditos_superavit, extraordinarios, reabertos, transf_recebidas, transf_concedidas, ajustes, disponivel, saldo_contabil, diferenca);
+                    //dt.Rows.Add(fr, receita, empenhos, creditos_superavit, extraordinarios, reabertos, transf_recebidas, transf_concedidas, ajustes, disponivel, saldo_contabil, diferenca);
+                    dt.Rows.Add(fr, receita, empenhos, creditos_superavit, extraordinarios, transf_recebidas, transf_concedidas, ajustes, disponivel, saldo_contabil, diferenca);
                 }
             }
 
