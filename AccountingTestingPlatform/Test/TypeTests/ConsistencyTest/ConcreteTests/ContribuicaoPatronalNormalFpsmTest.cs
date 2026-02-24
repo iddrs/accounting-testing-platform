@@ -22,7 +22,7 @@ namespace AccountingTestingPlatform.Test.TypeTests.ConsistencyTest.ConcreteTests
         protected override (string, ITestResult) ExecuteTest(string entidade)
         {
             string[] sql1 = [
-                $"select sum(saldo_atual)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like 'fpsm' and escrituracao like 'S' and conta_contabil like '11362010101%';",
+                $"select sum(saldo_atual)::decimal from pad.bal_ver where remessa = {_remessa} and entidade like 'fpsm' and escrituracao like 'S' and conta_contabil like '113620101%';",
             ];
             string[] sql2 = [
                 $"select sum(valor_liquidacao)::decimal from pad.liquidacao where remessa = {_remessa} and ano_empenho = {GetAnoRemessa(_remessa)} and data_liquidacao between '{GetLimitesRemessa(_remessa).Item1}' and '{GetLimitesRemessa(_remessa).Item2}' and rubrica like '31911308%';",
